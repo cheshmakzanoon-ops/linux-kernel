@@ -12,6 +12,7 @@ on:
       - master
     paths:
       - .github/workflows/nimbus-desktop-preview.yml
+      - distro/scripts/capture-qemu-preview.sh
 
 permissions:
   contents: read
