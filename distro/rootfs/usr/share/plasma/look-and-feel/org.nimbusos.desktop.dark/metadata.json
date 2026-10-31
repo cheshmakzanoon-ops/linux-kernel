@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nimbus OS Project"
+            }
+        ],
+        "Category": "",
+        "Description": "Nimbus OS desktop, dark variant: dark colors and icons, keeps your current panel layout",
+        "Id": "org.nimbusos.desktop.dark",
+        "License": "GPL-2.0-only",
+        "Name": "Nimbus Dark",
+        "Version": "1.0",
+        "Website": ""
+    }
+}

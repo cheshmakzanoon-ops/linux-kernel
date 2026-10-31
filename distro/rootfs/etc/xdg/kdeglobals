@@ -17,5 +17,8 @@ Theme=Papirus
 
 [KDE]
 LookAndFeelPackage=org.nimbusos.desktop
+AutomaticLookAndFeel=true
+DefaultLightLookAndFeel=org.nimbusos.desktop
+DefaultDarkLookAndFeel=org.nimbusos.desktop.dark
 SingleClick=false
 widgetStyle=Breeze
