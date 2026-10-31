@@ -65,7 +65,20 @@ jobs:
         continue-on-error: true
         run: |
           sudo chmod -R a+rX distro/out/image
-          bash distro/scripts/capture-qemu-preview.sh
+          if ! bash distro/scripts/capture-qemu-preview.sh; then
+            echo "::error::QEMU framebuffer capture failed; printing VM diagnostics"
+            if test -f "$RUNNER_TEMP/nimbus-preview/qemu.log"; then
+              tail -n 80 "$RUNNER_TEMP/nimbus-preview/qemu.log"
+            fi
+            exit 1
+          fi
+
+      - name: Remove temporary QEMU monitor socket
+        if: always()
+        run: |
+          if test -S "$RUNNER_TEMP/nimbus-preview/qemu-monitor.sock"; then
+            rm "$RUNNER_TEMP/nimbus-preview/qemu-monitor.sock"
+          fi
 
       - uses: actions/upload-artifact@v4
         if: always()
