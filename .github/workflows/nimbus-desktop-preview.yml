@@ -53,6 +53,9 @@ jobs:
             distro/mkosi/mkosi.conf
           sed -i '/^\[Content\]/a Packages=linux-image-amd64' \
             distro/mkosi/mkosi.conf
+          # Debian 13 renamed the package; fix the preview in its throwaway copy.
+          sed -i 's/^        spectacle$/        kde-spectacle/' \
+            distro/mkosi/mkosi.conf
           mkdir -p distro/out/kernel
 
       - name: Build the actual Nimbus desktop disk
