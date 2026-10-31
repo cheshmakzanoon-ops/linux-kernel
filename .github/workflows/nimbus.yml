@@ -11,6 +11,8 @@ on:
     paths:
       - kernel/configs/nimbus.config
       - 'distro/**'
+      # Screenshot harness changes are verified by nimbus-desktop-preview.
+      - '!distro/scripts/capture-qemu-preview.sh'
       - .github/workflows/nimbus.yml
   workflow_dispatch:
 
