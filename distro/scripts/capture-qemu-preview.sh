@@ -18,16 +18,25 @@ if [[ -z "$image" ]]; then
 fi
 
 firmware=""
+vars_template=""
 for candidate in /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_CODE.fd; do
-    if [[ -r "$candidate" ]]; then
+    if [[ "$candidate" == *_4M.fd ]]; then
+        vars_candidate="/usr/share/OVMF/OVMF_VARS_4M.fd"
+    else
+        vars_candidate="/usr/share/OVMF/OVMF_VARS.fd"
+    fi
+    if [[ -r "$candidate" && -r "$vars_candidate" ]]; then
         firmware="$candidate"
+        vars_template="$vars_candidate"
         break
     fi
 done
 if [[ -z "$firmware" ]]; then
-    echo "nimbus preview: OVMF UEFI firmware is missing" >&2
+    echo "nimbus preview: complete OVMF UEFI firmware pair is missing" >&2
     exit 1
 fi
+vars_copy="${RUNNER_TEMP:-/tmp}/nimbus-ovmf-vars.fd"
+cp "$vars_template" "$vars_copy"
 
 accel="tcg"
 if [[ -r /dev/kvm && -w /dev/kvm ]]; then
@@ -39,7 +48,9 @@ echo "nimbus preview: booting $image with $accel"
 qemu-system-x86_64 \
     -machine q35 -accel "$accel" -cpu max -smp 2 -m 4096 \
     -drive "file=$image,format=raw,if=virtio,snapshot=on" \
-    -bios "$firmware" -vga virtio -display none \
+    -drive "if=pflash,format=raw,unit=0,readonly=on,file=$firmware" \
+    -drive "if=pflash,format=raw,unit=1,file=$vars_copy" \
+    -vga virtio -display none \
     -monitor "unix:$monitor,server=on,wait=off" \
     -serial "file:$preview_dir/serial.log" -no-reboot \
     >"$preview_dir/qemu.log" 2>&1 &
@@ -48,6 +59,7 @@ qemu_pid=$!
 cleanup() {
     kill "$qemu_pid" 2>/dev/null || true
     wait "$qemu_pid" 2>/dev/null || true
+    rm -f "$vars_copy" "$monitor"
 }
 trap cleanup EXIT
 
@@ -58,6 +70,7 @@ for delay in 60 120 120; do
     elapsed=$((elapsed + delay))
     if ! kill -0 "$qemu_pid" 2>/dev/null; then
         echo "nimbus preview: QEMU exited before ${elapsed}s" >&2
+        tail -n 80 "$preview_dir/qemu.log" >&2 || true
         break
     fi
 
