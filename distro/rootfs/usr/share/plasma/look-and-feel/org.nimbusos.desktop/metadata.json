@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nimbus OS Project"
+            }
+        ],
+        "Category": "",
+        "Description": "Nimbus OS desktop: top menu bar with global menu and a floating centered dock",
+        "Id": "org.nimbusos.desktop",
+        "License": "GPL-2.0-only",
+        "Name": "Nimbus",
+        "Version": "1.0",
+        "Website": ""
+    },
+    "X-Plasma-MainScript": "defaults"
+}

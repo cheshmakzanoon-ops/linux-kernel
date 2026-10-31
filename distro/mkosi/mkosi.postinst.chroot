@@ -1,0 +1,35 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Nimbus OS post-install configuration, run by mkosi inside the image chroot.
+set -euo pipefail
+
+# Install the custom Nimbus kernel (mounted via BuildSources=../out/kernel:kernel).
+KDEBS="${SRCDIR:-/work/src}/kernel"
+shopt -s nullglob
+debs=("$KDEBS"/linux-image-*-nimbus*.deb)
+if [ "${#debs[@]}" -gt 0 ]; then
+    dpkg -i "${debs[@]}"
+else
+    echo "nimbus: no linux-image-*-nimbus .deb found in $KDEBS" >&2
+fi
+shopt -u nullglob
+
+# Services
+systemctl enable sddm.service
+systemctl enable NetworkManager.service
+systemctl set-default graphical.target
+
+# Boot splash
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+    plymouth-set-default-theme nimbus || true
+fi
+
+# Hostname
+echo nimbus > /etc/hostname
+
+# Live user: nimbus / nimbus, member of sudo
+if ! id -u nimbus >/dev/null 2>&1; then
+    useradd -m -s /bin/bash -c "Nimbus Live User" -G sudo nimbus
+fi
+echo 'nimbus:nimbus' | chpasswd

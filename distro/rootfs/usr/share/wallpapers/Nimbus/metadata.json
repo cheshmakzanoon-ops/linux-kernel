@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nimbus OS Project"
+            }
+        ],
+        "Description": "Soft layered waves in blue, violet and teal",
+        "Id": "Nimbus",
+        "License": "GPL-2.0-only",
+        "Name": "Nimbus"
+    }
+}

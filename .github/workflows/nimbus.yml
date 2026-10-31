@@ -1,0 +1,160 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Nimbus OS CI: build kernel .debs, build the mkosi disk image, lint distro files.
+name: nimbus
+
+on:
+  push:
+    branches:
+      - master
+      - 'claude/**'
+    paths:
+      - kernel/configs/nimbus.config
+      - 'distro/**'
+      - .github/workflows/nimbus.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nimbus-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install kernel build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential bc bison flex libssl-dev libelf-dev dwarves \
+            debhelper rsync cpio kmod python3
+
+      - name: Configure kernel
+        run: make x86_64_defconfig nimbus.config
+
+      - name: Build linux-image .debs
+        run: make -j"$(nproc)" bindeb-pkg LOCALVERSION=-nimbus
+
+      - name: Collect .debs
+        run: |
+          mkdir -p distro/out/kernel
+          find .. -maxdepth 1 -name '*.deb' -exec mv -t distro/out/kernel/ {} +
+          ls -l distro/out/kernel
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nimbus-kernel-debs
+          path: distro/out/kernel/*.deb
+          if-no-files-found: error
+
+  image:
+    needs: kernel
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nimbus-kernel-debs
+          path: distro/out/kernel
+
+      - name: Install mkosi and image tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            pipx git debian-archive-keyring apt dosfstools mtools \
+            e2fsprogs squashfs-tools zstd systemd-container \
+            systemd-ukify systemd-boot-efi
+          pipx install git+https://github.com/systemd/mkosi@v25.3
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Build image
+        run: |
+          mkosi --version
+          sudo env "PATH=$PATH" make -C distro image
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nimbus-image
+          path: distro/out/image/
+          if-no-files-found: error
+          compression-level: 6
+
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install linters
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            shellcheck libxml2-utils python3-yaml
+
+      - name: shellcheck
+        run: |
+          set -euo pipefail
+          files=()
+          while IFS= read -r -d '' f; do files+=("$f"); done < <(
+            find distro -type f \( -name '*.sh' -o -name 'mkosi.postinst.chroot' \
+              -o -name 'mkosi.*.chroot' \) -print0)
+          # nimbus-welcome may be shell or Python; only shellcheck shell scripts.
+          while IFS= read -r -d '' f; do
+            if head -n1 "$f" | grep -Eq '^#!.*(ba|da)?sh\b'; then
+              files+=("$f")
+            else
+              python3 -m py_compile "$f"
+            fi
+          done < <(find distro -type f -name 'nimbus-welcome*' \
+            ! -name '*.desktop' ! -name '*.svg' ! -name '*.png' -print0)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "no shell scripts found"; exit 0
+          fi
+          printf '%s\n' "${files[@]}"
+          shellcheck -x "${files[@]}"
+
+      - name: xmllint SVGs
+        run: |
+          set -euo pipefail
+          find distro -type f -name '*.svg' -print0 | xargs -0 -r xmllint --noout
+
+      - name: Calamares YAML check
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, sys, yaml
+          root = pathlib.Path("distro/rootfs/etc/calamares")
+          bad = 0
+          files = [p for p in root.rglob("*")
+                   if p.is_file() and p.suffix in (".conf", ".desc", ".yml", ".yaml")]
+          for p in sorted(files):
+              try:
+                  yaml.safe_load(p.read_text(encoding="utf-8"))
+                  print(f"ok   {p}")
+              except Exception as e:
+                  bad += 1
+                  print(f"FAIL {p}: {e}")
+          if not files:
+              print(f"no YAML files under {root}")
+          sys.exit(1 if bad else 0)
+          PY

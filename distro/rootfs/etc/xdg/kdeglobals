@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS system-wide KDE defaults
+
+[General]
+ColorScheme=NimbusLight
+font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+fixed=JetBrains Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[WM]
+activeFont=Inter,10,-1,5,600,0,0,0,0,0,0,0,0,0,0,1
+
+[Icons]
+Theme=Papirus
+
+[KDE]
+LookAndFeelPackage=org.nimbusos.desktop
+SingleClick=false
+widgetStyle=Breeze

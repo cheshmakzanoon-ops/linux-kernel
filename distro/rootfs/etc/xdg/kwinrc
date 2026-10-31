@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS window manager defaults
+
+[org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+# X = close, I = minimize, A = maximize
+ButtonsOnLeft=XIA
+ButtonsOnRight=
+
+[Plugins]
+wobblywindowsEnabled=false
+squashEnabled=false
+magiclampEnabled=true
+overviewEnabled=true
+
+# Overview on the top-left hot corner (ElectricTopLeft = 7)
+[Effect-overview]
+BorderActivate=7
+
+[ElectricBorders]
+TopLeft=None

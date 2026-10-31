@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS look-and-feel defaults
+
+[kdeglobals][KDE]
+widgetStyle=Breeze
+
+[kdeglobals][General]
+ColorScheme=NimbusLight
+
+[kdeglobals][Icons]
+Theme=Papirus
+
+[plasmarc][Theme]
+name=default
+
+[Wallpaper]
+Image=Nimbus
+
+[kcminputrc][Mouse]
+cursorTheme=breeze_cursors
+
+[kwinrc][WindowSwitcher]
+LayoutName=org.kde.breeze.desktop
+
+[kwinrc][DesktopSwitcher]
+LayoutName=org.kde.breeze.desktop
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+ButtonsOnLeft=XIA
+ButtonsOnRight=
