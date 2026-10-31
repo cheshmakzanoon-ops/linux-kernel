@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Faster visual smoke test for Nimbus OS. Uses the same Nimbus desktop,
+# packages and rootfs overlay, but Debian's packaged kernel so the full
+# upstream Linux source tree does not have to be compiled for a screenshot.
+name: nimbus-desktop-preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/nimbus-desktop-preview.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nimbus-desktop-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Install image and emulation tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            pipx git debian-archive-keyring apt dosfstools mtools \
+            e2fsprogs squashfs-tools zstd systemd-container \
+            systemd-ukify systemd-boot-efi qemu-system-x86 ovmf python3-pil
+          pipx install git+https://github.com/systemd/mkosi@v25.3
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Use Debian kernel for the visual preview only
+        run: |
+          # Never modify the checked-in distro definition: these edits
+          # affect only this runner's throwaway working tree.
+          sed -i '/^BuildSources=/d; /^PackageDirectories=/d' \
+            distro/mkosi/mkosi.conf
+          sed -i '/^\[Content\]/a Packages=linux-image-amd64' \
+            distro/mkosi/mkosi.conf
+          mkdir -p distro/out/kernel
+
+      - name: Build the actual Nimbus desktop disk
+        run: sudo env "PATH=$PATH" make -C distro image
+
+      - name: Boot the preview image and capture framebuffer screenshots
+        continue-on-error: true
+        run: |
+          sudo chmod -R a+rX distro/out/image
+          bash distro/scripts/capture-qemu-preview.sh
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nimbus-desktop-preview-screenshots
+          path: ${{ runner.temp }}/nimbus-preview/
+          if-no-files-found: warn
