@@ -12,8 +12,8 @@ Walk Through Windows of Current Application=Meta+`\tAlt+`,Alt+`,Walk Through Win
 Walk Through Windows of Current Application (Reverse)=Meta+~\tAlt+~,Alt+~,Walk Through Windows of Current Application (Reverse)
 Overview=Meta+Up\tMeta+W,Meta+W,Toggle Overview
 Window Quick Tile Top=none,Meta+Up,Quick Tile Window to the Top
-Switch One Desktop to the Left=Ctrl+Left\tMeta+Ctrl+Left,Meta+Ctrl+Left,Switch One Desktop to the Left
-Switch One Desktop to the Right=Ctrl+Right\tMeta+Ctrl+Right,Meta+Ctrl+Right,Switch One Desktop to the Right
+Switch One Desktop to the Left=Meta+Ctrl+Left,Meta+Ctrl+Left,Switch One Desktop to the Left
+Switch One Desktop to the Right=Meta+Ctrl+Right,Meta+Ctrl+Right,Switch One Desktop to the Right
 
 [plasmashell]
 _k_friendly_name=plasmashell
