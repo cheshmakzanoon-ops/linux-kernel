@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS Breeze window decoration defaults
+
+[Common]
+OutlineIntensity=OutlineOff
+ShadowSize=ShadowLarge
+ShadowStrength=200
+
+[Windeco]
+ButtonSize=ButtonDefault
+DrawBackgroundGradient=false
+TitleAlignment=AlignCenterFullWidth
+DrawBorderOnMaximizedWindows=false

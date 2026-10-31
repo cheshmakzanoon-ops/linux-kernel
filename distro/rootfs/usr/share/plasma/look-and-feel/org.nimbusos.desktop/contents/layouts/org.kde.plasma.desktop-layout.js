@@ -12,6 +12,7 @@ topBar.floating = false;
 topBar.hiding = "none";
 topBar.alignment = "left";
 topBar.lengthMode = "fill";
+topBar.opacity = "translucent";
 
 var launcher = topBar.addWidget("org.kde.plasma.kickoff");
 launcher.currentConfigGroup = ["General"];
@@ -35,6 +36,7 @@ dock.alignment = "center";
 dock.lengthMode = "fit";
 dock.floating = true;
 dock.hiding = "dodgewindows";
+dock.opacity = "translucent";
 
 var tasks = dock.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];

@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
-# Nimbus OS: no splash screen (look-and-feel package ships no splash QML)
+# Nimbus OS: QML boot-to-desktop splash shipped by the global theme
+# (look-and-feel/org.nimbusos.desktop/contents/splash/Splash.qml)
 
 [KSplash]
-Engine=none
-Theme=None
+Engine=KSplashQML
+Theme=org.nimbusos.desktop

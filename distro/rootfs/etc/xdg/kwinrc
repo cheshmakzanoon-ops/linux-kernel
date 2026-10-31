@@ -13,6 +13,13 @@ wobblywindowsEnabled=false
 squashEnabled=false
 magiclampEnabled=true
 overviewEnabled=true
+blurEnabled=true
+contrastEnabled=true
+translucencyEnabled=false
+
+[Effect-blur]
+BlurStrength=10
+NoiseStrength=2
 
 # Overview on the top-left hot corner (ElectricTopLeft = 7)
 [Effect-overview]

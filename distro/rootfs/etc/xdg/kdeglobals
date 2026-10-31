@@ -20,5 +20,6 @@ LookAndFeelPackage=org.nimbusos.desktop
 AutomaticLookAndFeel=true
 DefaultLightLookAndFeel=org.nimbusos.desktop
 DefaultDarkLookAndFeel=org.nimbusos.desktop.dark
+AnimationDurationFactor=0.7
 SingleClick=false
 widgetStyle=Breeze

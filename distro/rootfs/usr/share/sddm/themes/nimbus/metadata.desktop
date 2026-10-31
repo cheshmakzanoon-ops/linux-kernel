@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[SddmGreeterTheme]
+Name=Nimbus
+Description=Nimbus OS login screen with clock, avatar and session picker
+Author=Nimbus OS
+License=GPL-2.0-only
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+QtVersion=6
+Theme-Id=nimbus
+Theme-API=2.0
