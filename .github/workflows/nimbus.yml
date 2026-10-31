@@ -81,7 +81,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             pipx git debian-archive-keyring apt dosfstools mtools \
             e2fsprogs squashfs-tools zstd systemd-container \
-            systemd-ukify systemd-boot-efi
+            systemd-ukify systemd-boot-efi qemu-system-x86 ovmf python3-pil
           pipx install git+https://github.com/systemd/mkosi@v25.3
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
@@ -89,6 +89,19 @@ jobs:
         run: |
           mkosi --version
           sudo env "PATH=$PATH" make -C distro image
+
+      - name: Capture first-boot screenshots in QEMU
+        continue-on-error: true
+        run: |
+          sudo chmod -R a+rX distro/out/image
+          bash distro/scripts/capture-qemu-preview.sh
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nimbus-qemu-boot-preview
+          path: ${{ runner.temp }}/nimbus-preview/
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         with:
