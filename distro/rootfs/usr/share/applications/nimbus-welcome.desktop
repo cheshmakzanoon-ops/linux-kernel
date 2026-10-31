@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Desktop Entry]
+Type=Application
+Name=Nimbus Welcome
+GenericName=Welcome Guide
+Comment=Show the Nimbus OS welcome message and keyboard shortcut cheatsheet
+Exec=nimbus-welcome --force
+Icon=dialog-information
+Terminal=false
+Categories=System;Documentation;
+Keywords=welcome;shortcuts;keyboard;help;

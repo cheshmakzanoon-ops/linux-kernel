@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Calamares branding for Nimbus OS.
+---
+componentName: nimbus
+
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 900px,600px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+  productName: "Nimbus OS"
+  shortProductName: "Nimbus"
+  version: "1.0 (Cirrus)"
+  shortVersion: "1.0"
+  versionedName: "Nimbus OS 1.0 (Cirrus)"
+  shortVersionedName: "Nimbus 1.0"
+  bootloaderEntryName: "Nimbus"
+  productUrl: "https://example.org/nimbus"
+  supportUrl: "https://example.org/nimbus/support"
+  knownIssuesUrl: "https://example.org/nimbus/issues"
+  releaseNotesUrl: "https://example.org/nimbus/release-notes"
+  donateUrl: "https://example.org/nimbus"
+
+# Calamares resolves image paths relative to this directory unless they are
+# absolute; absolute paths are accepted, so the shared system logo is used
+# directly (no symlink or copy needed).
+images:
+  productLogo: "/usr/share/pixmaps/nimbus-logo.svg"
+  productIcon: "/usr/share/pixmaps/nimbus-logo.svg"
+  productWelcome: "/usr/share/pixmaps/nimbus-logo.svg"
+
+slideshow: "show.qml"
+slideshowAPI: 2
+
+style:
+  # Calamares 3.3 key names
+  SidebarBackground: "#1E1E1F"
+  SidebarText: "#FFFFFF"
+  SidebarTextCurrent: "#2F7CF6"
+  SidebarBackgroundCurrent: "#1E1E1F"
+  # Legacy (3.2) key names
+  sidebarBackground: "#1E1E1F"
+  sidebarText: "#FFFFFF"
+  sidebarTextSelect: "#2F7CF6"
+
+uploadServer:
+  type: "none"

@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0-only
+PRETTY_NAME="Nimbus OS 1.0 (Cirrus)"
+NAME="Nimbus OS"
+VERSION_ID="1.0"
+VERSION="1.0 (Cirrus)"
+VERSION_CODENAME=cirrus
+ID=nimbus
+ID_LIKE=debian
+HOME_URL="https://example.org/nimbus"
+SUPPORT_URL="https://example.org/nimbus/support"
+BUG_REPORT_URL="https://example.org/nimbus/bugs"
+LOGO=nimbus-logo
+ANSI_COLOR="38;2;47;124;246"

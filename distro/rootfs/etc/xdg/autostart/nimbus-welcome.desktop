@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Desktop Entry]
+Type=Application
+Name=Nimbus Welcome
+Comment=Show the Nimbus OS welcome message on first login
+Exec=nimbus-welcome
+Icon=dialog-information
+Terminal=false
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-autostart-phase=2

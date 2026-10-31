@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS Dolphin defaults. Places panel is shown by Dolphin's default
+# window layout; Icons is Dolphin's built-in default view mode.
+
+[General]
+HomeUrl[$e]=$HOME
+RememberOpenedTabs=false
+ShowFullPath=false
+ShowFullPathInTitlebar=false
+EditableUrl=false
+ShowStatusBar=true
+GlobalViewProps=true
+ShowZoomSlider=true
+
+[PlacesPanel]
+IconSize=22

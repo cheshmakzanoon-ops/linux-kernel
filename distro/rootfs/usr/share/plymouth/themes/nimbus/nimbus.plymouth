@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Plymouth Theme]
+Name=Nimbus
+Description=Nimbus OS boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/nimbus
+ScriptFile=/usr/share/plymouth/themes/nimbus/nimbus.script

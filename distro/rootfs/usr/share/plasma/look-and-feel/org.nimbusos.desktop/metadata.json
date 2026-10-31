@@ -13,6 +13,5 @@
         "Name": "Nimbus",
         "Version": "1.0",
         "Website": ""
-    },
-    "X-Plasma-MainScript": "defaults"
+    }
 }

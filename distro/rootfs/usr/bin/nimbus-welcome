@@ -1,0 +1,40 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# nimbus-welcome - show the Nimbus OS keyboard cheatsheet once per user.
+# Pass --force to show it again regardless of the marker.
+
+set -u
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+marker="$config_dir/nimbus-welcome-done"
+
+if [ "${1:-}" != "--force" ] && [ -e "$marker" ]; then
+	exit 0
+fi
+
+title="Welcome to Nimbus OS"
+text="Welcome to Nimbus OS!
+
+Keyboard shortcuts:
+  Meta+Space          Search and launch (KRunner)
+  Meta+Tab            Switch between windows
+  Meta+\`              Switch windows of the current app
+  Meta+Up             Overview of all windows
+  Ctrl+Left / Right   Previous / next virtual desktop
+  Meta+Ctrl+Q         Lock screen
+  Meta+Shift+3        Screenshot of the full screen
+  Meta+Shift+4        Screenshot of a selected region
+
+Run 'nimbus-welcome --force' to see this again."
+
+if command -v kdialog >/dev/null 2>&1; then
+	kdialog --title "$title" --msgbox "$text"
+elif command -v notify-send >/dev/null 2>&1; then
+	notify-send --app-name="Nimbus OS" --icon=dialog-information "$title" "$text"
+else
+	printf '%s\n' "$text"
+fi
+
+mkdir -p "$config_dir" && : > "$marker"
+exit 0

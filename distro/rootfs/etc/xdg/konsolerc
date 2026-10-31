@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS Konsole defaults.
+
+[Desktop Entry]
+DefaultProfile=Nimbus.profile
+
+[KonsoleWindow]
+RememberWindowSize=false
+ShowMenuBarByDefault=false
+
+[TabBar]
+CloseTabOnMiddleMouseButton=true
+NewTabBehavior=PutNewTabAfterCurrentTab

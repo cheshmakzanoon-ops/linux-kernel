@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Nimbus OS KRunner defaults: centered floating search bar with history.
+
+[General]
+FreeFloating=true
+ActivateWhenTypingOnDesktop=true
+RetainPriorSearch=false
+historyBehavior=CompletionSuggestion
+
+[Plugins]
+baloosearchEnabled=true

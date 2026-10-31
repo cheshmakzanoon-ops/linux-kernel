@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+<!-- Nimbus OS logo, monochrome symbolic variant -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Nimbus OS</title>
+  <circle cx="128" cy="128" r="112" fill="none" stroke="#000000" stroke-width="16"/>
+  <g fill="#000000">
+    <circle cx="93" cy="140" r="34"/>
+    <circle cx="133" cy="118" r="44"/>
+    <circle cx="169" cy="148" r="28"/>
+    <rect x="59" y="140" width="138" height="38" rx="19" ry="19"/>
+  </g>
+</svg>

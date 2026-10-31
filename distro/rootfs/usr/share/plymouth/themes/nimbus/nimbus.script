@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Nimbus OS Plymouth splash (script module)
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+screen_x = Window.GetX();
+screen_y = Window.GetY();
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+// Centered logo
+logo.image = Image("logo.png");
+logo.sprite = Sprite(logo.image);
+logo.x = screen_x + screen_w / 2 - logo.image.GetWidth() / 2;
+logo.y = screen_y + screen_h / 2 - logo.image.GetHeight() / 2 - 30;
+logo.sprite.SetPosition(logo.x, logo.y, 10);
+
+// Thin progress bar below the logo
+progress_box.image = Image("progress_box.png");
+progress_box.sprite = Sprite(progress_box.image);
+progress_box.x = screen_x + screen_w / 2 - progress_box.image.GetWidth() / 2;
+progress_box.y = logo.y + logo.image.GetHeight() + 40;
+progress_box.sprite.SetPosition(progress_box.x, progress_box.y, 10);
+
+progress_bar.original_image = Image("progress_bar.png");
+progress_bar.sprite = Sprite();
+progress_bar.width = 0;
+progress_bar.sprite.SetPosition(progress_box.x, progress_box.y, 11);
+
+fun progress_callback(duration, progress) {
+    width = Math.Int(progress_bar.original_image.GetWidth() * progress);
+    if (width < 1)
+        width = 1;
+    if (width != progress_bar.width) {
+        progress_bar.width = width;
+        progress_bar.image = progress_bar.original_image.Scale(width, progress_bar.original_image.GetHeight());
+        progress_bar.sprite.SetImage(progress_bar.image);
+    }
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+// Password prompt: entry box with bullets
+fun dialog_setup() {
+    local.entry;
+    local.prompt;
+
+    entry.image = Image("entry.png");
+    entry.sprite = Sprite(entry.image);
+    entry.x = screen_x + screen_w / 2 - entry.image.GetWidth() / 2;
+    entry.y = progress_box.y + 40;
+    entry.z = 100;
+    entry.sprite.SetPosition(entry.x, entry.y, entry.z);
+
+    prompt.sprite = Sprite();
+    prompt.x = entry.x;
+    prompt.y = entry.y - 24;
+    prompt.sprite.SetPosition(prompt.x, prompt.y, entry.z);
+
+    global.dialog.entry = entry;
+    global.dialog.prompt = prompt;
+    global.dialog.bullet_image = Image("bullet.png");
+    dialog_opacity(1);
+}
+
+fun dialog_opacity(opacity) {
+    dialog.entry.sprite.SetOpacity(opacity);
+    dialog.prompt.sprite.SetOpacity(opacity);
+    for (index = 0; dialog.bullet[index]; index++) {
+        dialog.bullet[index].sprite.SetOpacity(opacity);
+    }
+}
+
+fun display_normal_callback() {
+    global.status = "normal";
+    if (global.dialog)
+        dialog_opacity(0);
+}
+
+fun display_password_callback(prompt, bullets) {
+    global.status = "password";
+    if (!global.dialog)
+        dialog_setup();
+    else
+        dialog_opacity(1);
+
+    dialog.prompt.image = Image.Text(prompt, 1, 1, 1);
+    dialog.prompt.sprite.SetImage(dialog.prompt.image);
+
+    max_bullets = Math.Int((dialog.entry.image.GetWidth() - 16) / (dialog.bullet_image.GetWidth() + 4));
+    for (index = 0; dialog.bullet[index] || index < bullets; index++) {
+        if (!dialog.bullet[index]) {
+            dialog.bullet[index].sprite = Sprite(dialog.bullet_image);
+            dialog.bullet[index].x = dialog.entry.x + 10 + index * (dialog.bullet_image.GetWidth() + 4);
+            dialog.bullet[index].y = dialog.entry.y + dialog.entry.image.GetHeight() / 2 - dialog.bullet_image.GetHeight() / 2;
+            dialog.bullet[index].sprite.SetPosition(dialog.bullet[index].x, dialog.bullet[index].y, dialog.entry.z + 1);
+        }
+        if (index < bullets && index < max_bullets)
+            dialog.bullet[index].sprite.SetOpacity(1);
+        else
+            dialog.bullet[index].sprite.SetOpacity(0);
+    }
+}
+
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+// Boot messages, shown near the bottom of the screen
+message_sprite = Sprite();
+message_sprite.SetPosition(screen_x + 20, screen_y + screen_h - 40, 10000);
+
+fun message_callback(text) {
+    message_image = Image.Text(text, 0.8, 0.8, 0.8);
+    message_sprite.SetImage(message_image);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+fun quit_callback() {
+    logo.sprite.SetOpacity(0);
+    progress_box.sprite.SetOpacity(0);
+    progress_bar.sprite.SetOpacity(0);
+}
+Plymouth.SetQuitFunction(quit_callback);
