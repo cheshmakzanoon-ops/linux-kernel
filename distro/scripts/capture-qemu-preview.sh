@@ -80,11 +80,26 @@ for delay in 60 120 120; do
 import socket
 import sys
 
+def read_prompt(client):
+    chunks = []
+    while True:
+        part = client.recv(4096)
+        if not part:
+            raise RuntimeError("QEMU HMP monitor closed unexpectedly")
+        chunks.append(part)
+        data = b"".join(chunks)
+        if b"(qemu)" in data:
+            return data.decode(errors="replace")
+
 with socket.socket(socket.AF_UNIX) as client:
-    client.settimeout(10)
+    client.settimeout(30)
     client.connect(sys.argv[1])
+    read_prompt(client)  # Consume the initial banner and prompt.
     client.sendall(("screendump " + sys.argv[2] + "\n").encode())
-    client.recv(4096)
+    reply = read_prompt(client)
+    print("QEMU HMP:", reply.strip())
+    if "error" in reply.lower() or "not found" in reply.lower():
+        raise RuntimeError("QEMU screendump failed: " + reply.strip())
 PY
     then
         # Let QEMU finish writing the PPM frame before Pillow opens it.
