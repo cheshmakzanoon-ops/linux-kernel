@@ -34,7 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            build-essential bc bison flex libssl-dev libelf-dev dwarves \
+            build-essential bc bison flex libssl-dev libelf-dev libdw-dev dwarves \
             debhelper rsync cpio kmod python3
 
       - name: Configure kernel
